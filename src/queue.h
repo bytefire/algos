@@ -4,6 +4,7 @@
 struct queue;
 
 int queue_init(struct queue **q);
+void queue_finit(struct queue *q);
 int queue_enqueue(struct queue *q, void *val);
 void *queue_dequeue(struct queue *q);
 bool queue_is_empty(struct queue *q);

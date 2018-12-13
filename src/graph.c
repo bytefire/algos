@@ -101,9 +101,11 @@ int graph_add_edge(struct graph *g, size_t from, size_t to, int weight)
 	/* check if the edge already exists */
 	if (g->v[from]) {
 		e = g->v[from]->edges;
-		while (e)
+		while (e) {
 			if (e->to == to)
 				return 0;
+			e = e->next;
+		}
 	}
 
 	if (!g->v[from]) {
@@ -143,7 +145,6 @@ void graph_bfs(struct graph *g, int start, void (*process_vertex)(size_t))
 {
 	struct vertex *v;
 	struct edge *e;
-	// TODO: implement queue
 	struct queue *q;
 	bool *marked, *processed;
 
@@ -164,20 +165,14 @@ void graph_bfs(struct graph *g, int start, void (*process_vertex)(size_t))
 		/* now enqueue vertices connected to this one */
 		e = v->edges;
 		while (e) {
-			if (!marked[e->to] && !processed[e->to])
+			if (!marked[e->to] && !processed[e->to]) {
 				queue_enqueue(q, g->v[e->to]);
+				marked[e->to] = true;
+			}
 			e = e->next;
 		}
 	}
 
 	free(marked);
 	free(processed);
-}
-
-// TODO: separate this main to an external driver program
-int main(void)
-{
-	printf("Placeholder\n");
-
-	return 0;
 }

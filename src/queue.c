@@ -36,6 +36,11 @@ int queue_init(struct queue **q)
 	return 0;
 }
 
+void queue_finit(struct queue *q)
+{
+	free(q);
+}
+
 int queue_enqueue(struct queue *q, void *val)
 {
 	if (is_full(q))
