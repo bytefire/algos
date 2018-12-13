@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <errno.h>
+#include <stdbool.h>
 
 #include "graph.h"
+#include "queue.h"
 
 #define MAX_VERTICES 64
 
@@ -15,7 +17,7 @@ struct edge {
 };
 
 struct vertex {
-	int id; /* index in array of vertices in the graph */
+	size_t id; /* index in array of vertices in the graph */
 
 	/* list of all edges starting from this node */
 	struct edge *edges;
@@ -137,6 +139,42 @@ int graph_add_edge(struct graph *g, size_t from, size_t to, int weight)
 	return 0;
 }
 
+void graph_bfs(struct graph *g, int start, void (*process_vertex)(size_t))
+{
+	struct vertex *v;
+	struct edge *e;
+	// TODO: implement queue
+	struct queue *q;
+	bool *marked, *processed;
+
+	marked = malloc(g->highest_vertex * sizeof(bool));
+	memset(marked, 0, g->highest_vertex * sizeof(bool));
+	processed = malloc(g->highest_vertex * sizeof(bool));
+	memset(processed, 0, g->highest_vertex * sizeof(bool));
+	queue_init(&q);
+	v = g->v[start];
+
+	queue_enqueue(q, v);
+	marked[v->id] = true;
+
+	while(!queue_is_empty(q)) {
+		v = queue_dequeue(q);
+		(*process_vertex)(v->id);
+		processed[v->id] = true;
+		/* now enqueue vertices connected to this one */
+		e = v->edges;
+		while (e) {
+			if (!marked[e->to] && !processed[e->to])
+				queue_enqueue(q, g->v[e->to]);
+			e = e->next;
+		}
+	}
+
+	free(marked);
+	free(processed);
+}
+
+// TODO: separate this main to an external driver program
 int main(void)
 {
 	printf("Placeholder\n");
