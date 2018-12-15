@@ -176,3 +176,77 @@ void graph_bfs(struct graph *g, int start, void (*process_vertex)(size_t))
 	free(marked);
 	free(processed);
 }
+
+size_t *graph_topological_sort(struct graph *g)
+{
+	size_t *ret = malloc(sizeof(size_t) * g->highest_vertex);
+	int *indegree = malloc(sizeof(size_t) * g->highest_vertex);
+	bool *processed = malloc(sizeof(size_t) * g->highest_vertex);
+	int i, num_sorted = 0;
+	int num_vertices = 0;
+
+	memset(ret, -1, sizeof(size_t) * g->highest_vertex);
+	memset(indegree, -1, sizeof(size_t) * g->highest_vertex);
+	memset(processed, 0, sizeof(size_t) * g->highest_vertex);
+
+	/* first build indregree array */
+	for (i = 0; i <= g->highest_vertex; i++) {
+		struct edge *e;
+
+		if (!g->v[i])
+			continue;
+
+		num_vertices++;
+		e = g->v[i]->edges;
+		while (e) {
+			if (indegree[e->to] == -1)
+				indegree[e->to] = 0;
+			indegree[e->to]++;
+			e = e->next;
+		}
+	}
+
+	while (num_sorted < num_vertices) {
+		for (i = 0; i <= g->highest_vertex; i++) {
+			struct edge *e;
+			if (indegree[i] != 0 || processed[i])
+				continue;
+			/* here means we found a new vertex with indegree
+			 * zero
+			 */
+
+			ret[num_sorted] = i;
+			num_sorted++;
+			processed[i] = true;
+			/* decrement indegree of each node which has edge going
+			 * from node i
+			 */
+			e = g->v[i]->edges;
+			while (e) {
+				indegree[e->to]--;
+				e = e->next;
+			}
+
+			break;
+		}
+
+		if (i > g->highest_vertex) {
+			/* we didn't find a new vertex with indegree 0 so there
+			 * must be a cycle */
+			free(ret);
+			ret = NULL;
+			goto out;
+		}
+	}
+
+out:
+	free(processed);
+	free(indegree);
+	return ret;
+}
+
+struct tree_node *graph_prims(struct graph *g)
+{
+	/* TODO */
+	return NULL;
+}

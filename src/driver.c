@@ -8,7 +8,7 @@ static void process_vertex(size_t id)
 	printf("visited vertex %ld\n", id);
 }
 
-int main(void)
+static void test_bfs(void)
 {
 	struct graph *g;
 
@@ -25,6 +25,17 @@ int main(void)
 	graph_bfs(g, 0, process_vertex);
 
 	graph_finit(g);
+}
+
+static void test_topological_sort(void)
+{
+	// TODO:
+}
+
+int main(void)
+{
+	test_bfs();
+	test_topological_sort();
 
 	return 0;
 }
