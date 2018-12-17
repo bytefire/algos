@@ -1,4 +1,7 @@
-all:
-	gcc -Wall -ggdb -O0 -o bin/driver src/graph.c src/queue.c src/driver.c
+backtrack:
+	gcc -Wall -O0 -ggdb -o bin/backtrack src/backtrack.c
+graph:
+	gcc -Wall -O0 -ggdb -o bin/backtrack src/backtrack.c
+all:  graph backtrack
 clean:
 	rm -r bin/*
