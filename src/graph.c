@@ -64,6 +64,7 @@ static struct edge *create_edge(size_t from, size_t to, int weight)
 	e->from = from;
 	e->to = to;
 	e->weight = weight;
+	e->next = NULL;
 
 	return e;
 }
@@ -179,15 +180,16 @@ void graph_bfs(struct graph *g, int start, void (*process_vertex)(size_t))
 
 size_t *graph_topological_sort(struct graph *g)
 {
-	size_t *ret = malloc(sizeof(size_t) * g->highest_vertex);
-	int *indegree = malloc(sizeof(size_t) * g->highest_vertex);
-	bool *processed = malloc(sizeof(size_t) * g->highest_vertex);
+	int sz = g->highest_vertex + 1;
+	size_t *ret = malloc(sizeof(size_t) * sz);
+	int *indegree = malloc(sizeof(size_t) * sz);
+	bool *processed = malloc(sizeof(size_t) * sz);
 	int i, num_sorted = 0;
 	int num_vertices = 0;
 
-	memset(ret, -1, sizeof(size_t) * g->highest_vertex);
-	memset(indegree, -1, sizeof(size_t) * g->highest_vertex);
-	memset(processed, 0, sizeof(size_t) * g->highest_vertex);
+	memset(ret, -1, sizeof(size_t) * sz);
+	memset(indegree, -1, sizeof(size_t) * sz);
+	memset(processed, 0, sizeof(size_t) * sz);
 
 	/* first build indregree array */
 	for (i = 0; i <= g->highest_vertex; i++) {
@@ -195,6 +197,9 @@ size_t *graph_topological_sort(struct graph *g)
 
 		if (!g->v[i])
 			continue;
+
+		if (indegree[i] == -1)
+			indegree[i] = 0;
 
 		num_vertices++;
 		e = g->v[i]->edges;

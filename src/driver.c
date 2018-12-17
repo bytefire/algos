@@ -29,7 +29,36 @@ static void test_bfs(void)
 
 static void test_topological_sort(void)
 {
-	// TODO:
+	struct graph *g;
+	size_t *sorted;
+	int i;
+
+	graph_init(&g);
+
+	/*
+	 *
+	 * 1 --> 0---|          |---> 2
+	 * |         |---> 5 ---|
+	 * |---> 3---|          |---> 4
+	 *
+	 */
+
+	graph_add_edge(g, 1, 0, 0);
+	graph_add_edge(g, 1, 3, 0);
+	graph_add_edge(g, 0, 5, 0);
+	graph_add_edge(g, 3, 5, 0);
+	graph_add_edge(g, 5, 2, 0);
+	graph_add_edge(g, 5, 4, 0);
+
+	sorted = graph_topological_sort(g);
+
+	for (i = 0; i < 6; i++)
+		printf("%ld -> ", sorted[i]);
+
+	printf("\n");
+
+	free(sorted);
+	graph_finit(g);
 }
 
 int main(void)
