@@ -303,21 +303,15 @@ struct edge **graph_prims(struct graph *g, int *len)
 	bool visited[MAX_VERTICES]; /* true for vertices visited so far */
 	int total = g->highest_vertex + 1;
 	int vcount = 0; /* number of vertices covered so far */
-	struct edge *e;
 
 	mst = malloc(sizeof(struct edge *) * (MAX_VERTICES - 1));
 	memset(visited, 0, sizeof(bool) * MAX_VERTICES);
 
-	/* first pick the cheapest edge regardless whether it is connected to
-	 * existing mst, i.e. kruskal's cheapest edge
-	 */
-	e = cheapest_edge_kruskal(g, visited);
-	visited[e->from] = true;
-	visited[e->to] = true;
-	vcount += 2;
+	visited[0] = true;
+	vcount++;
 
 	while (vcount < total) {
-		e = cheapest_edge_prim(g, visited);
+		struct edge *e = cheapest_edge_prim(g, visited);
 		if (!e)
 			break;
 
