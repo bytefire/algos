@@ -36,4 +36,5 @@ size_t *graph_topological_sort(struct graph *g);
  */
 struct edge **graph_prims(struct graph *g, int *len);
 
+struct edge **graph_kruskal(struct graph *g, int *len);
 #endif // __GRAPH_H__

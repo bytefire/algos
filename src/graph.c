@@ -303,14 +303,21 @@ struct edge **graph_prims(struct graph *g, int *len)
 	bool visited[MAX_VERTICES]; /* true for vertices visited so far */
 	int total = g->highest_vertex + 1;
 	int vcount = 0; /* number of vertices covered so far */
+	struct edge *e;
 
 	mst = malloc(sizeof(struct edge *) * (MAX_VERTICES - 1));
 	memset(visited, 0, sizeof(bool) * MAX_VERTICES);
-	visited[0] = true;
-	vcount++;
+
+	/* first pick the cheapest edge regardless whether it is connected to
+	 * existing mst, i.e. kruskal's cheapest edge
+	 */
+	e = cheapest_edge_kruskal(g, visited);
+	visited[e->from] = true;
+	visited[e->to] = true;
+	vcount += 2;
 
 	while (vcount < total) {
-		struct edge *e = cheapest_edge_prim(g, visited);
+		e = cheapest_edge_prim(g, visited);
 		if (!e)
 			break;
 
@@ -339,8 +346,6 @@ struct edge **graph_kruskal(struct graph *g, int *len)
 
 	mst = malloc(sizeof(struct edge *) * (MAX_VERTICES - 1));
 	memset(visited, 0, sizeof(bool) * MAX_VERTICES);
-	visited[0] = true;
-	vcount++;
 
 	while (vcount < total) {
 		struct edge *e = cheapest_edge_kruskal(g, visited);
@@ -348,13 +353,15 @@ struct edge **graph_kruskal(struct graph *g, int *len)
 			break;
 
 		mst[mst_idx] = e;
-		/* although there is a relation between mst_idx and vcount, we
-		 * keep them separate for better readability. after all the
-		 * primary aim of this project is educational.
-		 */
 		mst_idx++;
 		visited[e->to] = true;
 		vcount++;
+
+		/* in kruskal, both vertices could be unvisited */
+		if (!visited[e->from]) {
+			visited[e->from] = true;
+			vcount++;
+		}
 	}
 
 	*len = mst_idx + 1;
