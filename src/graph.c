@@ -65,7 +65,7 @@ static struct edge *create_edge(size_t from, size_t to, int weight)
 /* NOTE: this is best implemented by a heap. we haven't covered heap yet, therefore
  * using this "manual" method.
  */
-static struct edge *cheapest_edge(struct graph *g, bool *visited)
+static struct edge *cheapest_edge_prim(struct graph *g, bool *visited)
 {
 	int i;
 	int lowest_weight = 1000;
@@ -88,6 +88,32 @@ static struct edge *cheapest_edge(struct graph *g, bool *visited)
 
 	return cheapest;
 }
+
+/* NOTE: this is best implemented by a heap. we haven't covered heap yet, therefore
+ * using this "manual" method.
+ */
+static struct edge *cheapest_edge_kruskal(struct graph *g, bool *visited)
+{
+	int i;
+	int lowest_weight = 1000;
+	struct edge *cheapest = NULL;
+
+	for (i = 0; i <= g->highest_vertex; i++) {
+		struct edge *e = g->v[i]->edges;
+		while (e) {
+			if (e->weight <= lowest_weight &&
+					!visited[e->to]) {
+				cheapest = e;
+				lowest_weight = e->weight;
+			}
+
+			e = e->next;
+		}
+	}
+
+	return cheapest;
+}
+
 
 int graph_init(struct graph **g)
 {
@@ -270,21 +296,55 @@ out:
 	return ret;
 }
 
-struct edge **graph_prims(struct graph *g, int *len;)
+struct edge **graph_prims(struct graph *g, int *len)
 {
-	struct edge *mst[MAX_VERTICES - 1]; /* minimum spanning tree */
+	struct edge **mst; /* minimum spanning tree */
 	int mst_idx = 0; /* next slot to fill in mst */
 	bool visited[MAX_VERTICES]; /* true for vertices visited so far */
 	int total = g->highest_vertex + 1;
 	int vcount = 0; /* number of vertices covered so far */
 
+	mst = malloc(sizeof(struct edge *) * (MAX_VERTICES - 1));
 	memset(visited, 0, sizeof(bool) * MAX_VERTICES);
 	visited[0] = true;
 	vcount++;
 
 	while (vcount < total) {
-		struct edge *e = cheapest_edge(g, visited);
-		if (!edge)
+		struct edge *e = cheapest_edge_prim(g, visited);
+		if (!e)
+			break;
+
+		mst[mst_idx] = e;
+		/* although there is a relation between mst_idx and vcount, we
+		 * keep them separate for better readability. after all the
+		 * primary aim of this project is educational.
+		 */
+		mst_idx++;
+		visited[e->to] = true;
+		vcount++;
+	}
+
+	*len = mst_idx + 1;
+
+	return mst;
+}
+
+struct edge **graph_kruskal(struct graph *g, int *len)
+{
+	struct edge **mst; /* minimum spanning tree */
+	int mst_idx = 0; /* next slot to fill in mst */
+	bool visited[MAX_VERTICES]; /* true for vertices visited so far */
+	int total = g->highest_vertex + 1;
+	int vcount = 0; /* number of vertices covered so far */
+
+	mst = malloc(sizeof(struct edge *) * (MAX_VERTICES - 1));
+	memset(visited, 0, sizeof(bool) * MAX_VERTICES);
+	visited[0] = true;
+	vcount++;
+
+	while (vcount < total) {
+		struct edge *e = cheapest_edge_kruskal(g, visited);
+		if (!e)
 			break;
 
 		mst[mst_idx] = e;
