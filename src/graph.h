@@ -1,12 +1,13 @@
 #ifndef __GRAPH_H__
 #define __GRAPH_H__
 
-struct graph;
-
-struct tree_node {
-	size_t parent;
+struct edge {
+	int from; /* index of from vertex */
+	int to; /* index of to vertex */
 	int weight;
+	struct edge *next;
 };
+struct graph;
 
 int graph_init(struct graph **g);
 void graph_finit(struct graph *g);
@@ -29,10 +30,10 @@ size_t *graph_topological_sort(struct graph *g);
  * undirected graph. this is a greedy algorithm. returns an array of
  * struct tree_node representing the tree.
  *
- * note that the graph passed in is indeed undirected, i.e. there
+ * ensure that the graph passed in is indeed undirected, i.e. there
  * are two edges between each pair of connected nodes and both
  * edges have same weights.
  */
-struct tree_node *graph_prims(struct graph *g);
+struct edge **graph_prims(struct graph *g, int *len);
 
 #endif // __GRAPH_H__
