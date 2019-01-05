@@ -20,7 +20,7 @@ void generate_moves(int moves[3], int *count, int steps_left)
 {
 	moves[0] = 1;
 	moves[1] = 2;
-	moves[3] = 3;
+	moves[2] = 3;
 
 	*count = steps_left >= 3 ? 3 : steps_left;
 }
@@ -75,7 +75,7 @@ int main(void)
 
 	memset(s, 0, sizeof(struct state));
 	s->k = -1;
-	nsteps(s, 3);
+	nsteps(s, 6);
 
 	return 0;
 }

@@ -1,5 +1,5 @@
 nsteps:
-	gcc -Wall -O0 -ggdb -fno-stack-protector -o bin/nsteps src/nsteps.c
+	gcc -Wall -O0 -ggdb -o bin/nsteps src/nsteps.c
 array2bst:
 	gcc -Wall -O0 -ggdb -o bin/array2bst src/array2bst.c
 all_paths:
