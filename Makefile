@@ -1,3 +1,5 @@
+maze:
+	gcc -Wall -O0 -ggdb -o bin/maze src/maze.c
 nsteps:
 	gcc -Wall -O0 -ggdb -o bin/nsteps src/nsteps.c
 array2bst:
@@ -12,6 +14,6 @@ backtrack:
 	gcc -Wall -O0 -ggdb -o bin/backtrack src/backtrack.c
 graph:
 	gcc -Wall -ggdb -O0 -o bin/driver src/graph.c src/queue.c src/driver.c
-all:  graph backtrack permutations subsets all_paths array2bst nsteps
+all:  graph backtrack permutations subsets all_paths array2bst nsteps maze
 clean:
 	rm -r bin/*
