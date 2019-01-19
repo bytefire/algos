@@ -1,3 +1,5 @@
+cycle-digraph:
+	gcc -Wall -O0 -ggdb -o bin/cycle-digraph src/cycle-digraph.c
 cycle:
 	gcc -Wall -O0 -ggdb -o bin/cycle src/cycle.c
 lns:
@@ -18,6 +20,6 @@ backtrack:
 	gcc -Wall -O0 -ggdb -o bin/backtrack src/backtrack.c
 graph:
 	gcc -Wall -ggdb -O0 -o bin/driver src/graph.c src/queue.c src/driver.c
-all:  graph backtrack permutations subsets all_paths array2bst nsteps maze lns cycle
+all:  graph backtrack permutations subsets all_paths array2bst nsteps maze lns cycle cycle-digraph
 clean:
 	rm -r bin/*
