@@ -10,8 +10,10 @@ struct input {
 	int scount;
 };
 
-static const char *dictionary[] = { "steal", "i", "stealing", "one", "money" };
-static int dictionary_count = 5;
+// static const char *dictionary[] = { "steal", "i", "stealing", "one", "money" };
+static const char *dictionary[] = { "row", "own", "brow", "brown", "or", "nor", "ran", "range", "rang", "an", "orange" };
+// static int dictionary_count = 5;
+static int dictionary_count = 11;
 
 static int is_word(const char *s, int len)
 {
@@ -99,7 +101,8 @@ void unconcatenate(struct input *in)
 int main(void)
 {
 	struct input in = {
-		.str = "stealimoney",
+		// .str = "stealimoney",
+		.str = "brownorange",
 		.spaces = { 0 },
 		.scount = 0,
 	};
